@@ -35,7 +35,6 @@ namespace gerenciadorChamados.Dominio
 
         public List<Chamado> ListarTodos()
         {
-            // Retorna uma cópia para evitar que chamadores alterem diretamente a coleção interna
             return new List<Chamado>(_chamados);
         }
 

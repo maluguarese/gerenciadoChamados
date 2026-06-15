@@ -7,7 +7,6 @@ using gerenciadorChamados.Persistencia;
 string caminhoArquivo =
     Path.Combine(AppContext.BaseDirectory, "chamados.json");
 
-// Define cultura para pt-BR para exibição de datas e números
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
@@ -20,7 +19,8 @@ GerenciadorChamados gerenciador =
     new GerenciadorChamados(chamados);
 
 // Inicia menu interativo
-var menu = new gerenciadorChamados.UI.MenuConsole(gerenciador);
+var repositorioInst = repositorio;
+var menu = new gerenciadorChamados.UI.MenuConsole(gerenciador, repositorioInst);
 menu.Executar();
 
 // Ao sair, salva o estado atual

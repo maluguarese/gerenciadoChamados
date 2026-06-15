@@ -25,8 +25,39 @@ namespace gerenciadorChamados.Persistencia
 
             string json = File.ReadAllText(_caminhoArquivo);
 
-            return JsonSerializer.Deserialize<List<Chamado>>(json)
-                   ?? new List<Chamado>();
+            try
+            {
+                var carregados = JsonSerializer.Deserialize<List<Chamado>>(json)
+                                ?? new List<Chamado>();
+
+                var validados = new List<Chamado>();
+
+                foreach (var c in carregados)
+                {
+                    if (c == null)
+                    {
+                        Console.WriteLine("Aviso: encontrado registro nulo em chamados.json e foi descartado.");
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(c.Descricao))
+                    {
+                        Console.WriteLine($"Aviso: chamado com Id {c.Id} possui descrição vazia e foi descartado.");
+                        continue;
+                    }
+
+                    // Observação: não alteramos dados desserializados aqui para manter fidelidade ao arquivo;
+                    // apenas removemos registros claramente inválidos.
+                    validados.Add(c);
+                }
+
+                return validados;
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Erro ao ler {Path.GetFileName(_caminhoArquivo)}: {ex.Message}");
+                return new List<Chamado>();
+            }
         }
 
         public void Salvar(List<Chamado> chamados)
