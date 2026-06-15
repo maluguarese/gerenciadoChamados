@@ -1,10 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Globalization;
 using gerenciadorChamados.Dominio;
 using gerenciadorChamados.Persistencia;
 
 string caminhoArquivo =
     Path.Combine(AppContext.BaseDirectory, "chamados.json");
+
+// Define cultura para pt-BR para exibição de datas e números
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
 
 RepositorioChamados repositorio =
     new RepositorioChamados(caminhoArquivo);
@@ -14,35 +19,10 @@ var chamados = repositorio.Carregar();
 GerenciadorChamados gerenciador =
     new GerenciadorChamados(chamados);
 
-Console.WriteLine("Criando chamados...");
+// Inicia menu interativo
+var menu = new gerenciadorChamados.UI.MenuConsole(gerenciador);
+menu.Executar();
 
-var chamado1 =
-    gerenciador.AbrirChamado("Impressora não funciona.");
-
-var chamado2 =
-    gerenciador.AbrirChamado("Erro ao acessar portal.");
-
-gerenciador.ConcluirChamado(chamado1.Id);
-
+// Ao sair, salva o estado atual
 repositorio.Salvar(gerenciador.ListarTodos());
-
 Console.WriteLine("Dados salvos.");
-
-Console.WriteLine("\nRecarregando dados...\n");
-
-var lista = repositorio.Carregar();
-
-foreach (var chamado in lista)
-{
-    Console.WriteLine($"ID: {chamado.Id}");
-    Console.WriteLine($"Descrição: {chamado.Descricao}");
-    Console.WriteLine($"Status: {chamado.Status}");
-    Console.WriteLine($"Abertura: {chamado.DataAbertura}");
-
-    if (chamado.DataConclusao != null)
-    {
-        Console.WriteLine($"Conclusão: {chamado.DataConclusao}");
-    }
-
-    Console.WriteLine("--------------------------");
-}

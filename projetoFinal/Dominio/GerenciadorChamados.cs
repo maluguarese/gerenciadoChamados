@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace gerenciadorChamados.Dominio
@@ -10,7 +11,10 @@ namespace gerenciadorChamados.Dominio
 
         public GerenciadorChamados(List<Chamado> chamados)
         {
-            _chamados = chamados;
+            // Clona a lista recebida para proteger o estado interno de modificações externas
+            _chamados = chamados != null
+                ? new List<Chamado>(chamados)
+                : new List<Chamado>();
         }
 
         public Chamado AbrirChamado(string descricao)
@@ -31,7 +35,8 @@ namespace gerenciadorChamados.Dominio
 
         public List<Chamado> ListarTodos()
         {
-            return _chamados;
+            // Retorna uma cópia para evitar que chamadores alterem diretamente a coleção interna
+            return new List<Chamado>(_chamados);
         }
 
         public Chamado ObterPorId(int id)

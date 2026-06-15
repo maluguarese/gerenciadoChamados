@@ -6,15 +6,15 @@ namespace gerenciadorChamados.Dominio
 {
     public class Chamado
     {
-        public int Id { get; set; }
+        public int Id { get; private set; }
 
-        public string Descricao { get; set; }
+        public string Descricao { get; private set; }
 
-        public StatusChamado Status { get; set; }
+        public StatusChamado Status { get; private set; }
 
-        public DateTime DataAbertura { get; set; }
+        public DateTime DataAbertura { get; private set; }
 
-        public DateTime? DataConclusao { get; set; }
+        public DateTime? DataConclusao { get; private set; }
 
         public Chamado()
         {
